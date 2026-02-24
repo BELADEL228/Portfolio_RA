@@ -45,46 +45,43 @@ export default function SkillsSection() {
                   {cat.label}
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {catSkills.map((skill, idx) => (
                     <motion.div
                       key={skill.name}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: idx * 0.06 }}
+                      transition={{ duration: 0.4, delay: idx * 0.05 }}
                       className={cn(
-                        "rounded-xl p-4 sm:p-6 transition-all group",
-                        "border border-gray-200 dark:border-raycart-card/30",
-                        "bg-white/80 dark:bg-white/5",
-                        "backdrop-blur-md",
-                        "shadow-sm hover:shadow-md dark:shadow-none",
-                        "hover:border-raycart-accent/50",
-                        "hover:-translate-y-1"
+                        "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg group cursor-default",
+                        "bg-gradient-to-br from-white/40 to-white/20 dark:from-white/5 dark:to-white/0",
+                        "border border-raycart-accent/20",
+                        "transition-all duration-300",
+                        "hover:border-raycart-accent/50 hover:shadow-md hover:shadow-raycart-accent/15",
+                        "hover:bg-gradient-to-br hover:from-white/60 hover:to-white/40",
+                        "dark:hover:from-white/10 dark:hover:to-white/5"
                       )}
                     >
-                      <div className="flex justify-between items-center mb-3 sm:mb-4">
-                        <h4 className="text-base sm:text-lg font-semibold text-raycart-text group-hover:text-raycart-accent transition-colors">
-                          {skill.name}
-                        </h4>
-                        <span className="text-raycart-accent font-bold text-sm sm:text-base">
-                          {skill.level}%
-                        </span>
-                      </div>
-
-                      <div className="relative h-2 sm:h-3 bg-gray-200 dark:bg-raycart-card rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.level}%` }}
-                          viewport={{ once: true }}
-                          transition={{
-                            duration: 0.8,
-                            ease: "easeOut",
-                            delay: 0.2,
-                          }}
-                          className="absolute inset-y-0 left-0 bg-raycart-accent rounded-full"
+                      <div className={cn(
+                        "relative w-12 h-12 sm:w-14 sm:h-14 rounded-md flex-shrink-0",
+                        "bg-gradient-to-br from-raycart-accent/15 to-raycart-accent/5",
+                        "border border-raycart-accent/30",
+                        "flex items-center justify-center",
+                        "transition-all duration-300",
+                        "group-hover:border-raycart-accent/60 group-hover:shadow-md group-hover:shadow-raycart-accent/20",
+                        "dark:bg-gradient-to-br dark:from-raycart-accent/8 dark:to-raycart-accent/0"
+                      )}>
+                        <img
+                          src={`/icons/${skill.iconName}.svg`}
+                          alt={skill.name}
+                          className="w-6 h-6 sm:w-7 sm:h-7 object-contain opacity-85 group-hover:opacity-100 transition-opacity"
+                          loading="lazy"
                         />
                       </div>
+                      <p className="text-sm sm:text-base text-raycart-text font-medium group-hover:text-raycart-accent transition-colors flex-1 line-clamp-2">
+                        {skill.name}
+                      </p>
                     </motion.div>
                   ))}
                 </div>

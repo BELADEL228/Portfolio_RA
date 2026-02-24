@@ -23,10 +23,16 @@ function applyThemeToDom(theme: Theme) {
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "dark";
 
-  const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    // localStorage might be unavailable in some environments
+  }
 
-  return "dark";
+  // fall back to system preference when no stored theme
+  const mql = window.matchMedia("(prefers-color-scheme: dark)");
+  return mql.matches ? "dark" : "light";
 }
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -48,6 +54,15 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     applyThemeToDom(theme);
+
+    // keep theme-color meta tag in sync (Android / PWA)
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      meta.setAttribute(
+        "content",
+        theme === "dark" ? "#050A14" : "#ffffff"
+      );
+    }
   }, [theme]);
 
   const value = useMemo<ThemeContextValue>(
@@ -88,6 +103,7 @@ const translations: Record<Locale, Record<string, string>> = {
   fr: {
     "nav.home": "Accueil",
     "nav.about": "À propos",
+    "nav.skills": "Compétences",
     "nav.projects": "Projets",
     "nav.experience": "Expérience",
     "nav.achievements": "Distinctions",
@@ -113,6 +129,23 @@ const translations: Record<Locale, Record<string, string>> = {
     "projects.filter.all": "Tous",
     "projects.filter.featured": "À la une",
     "projects.filter.none": "Aucun projet dans cette catégorie pour le moment.",
+    "projects.filter.mobile": "Mobile",
+    "projects.filter.backend": "Backend",
+    "projects.filter.ai": "IA / AI",
+    "projects.filter.contribution": "Contributions",
+    "projects.filter.algorithmique": "Algo",
+    "project.badge.featured": "À la une",
+    "project.badge.private": "Privé",
+    "project.category.mobile": "Mobile",
+    "project.category.backend": "Backend",
+    "project.category.ai": "IA",
+    "project.category.contribution": "Contribution",
+    "project.category.algorithmique": "Algo",
+    "experience.title": "Parcours & Expériences",
+    "experience.subtitle": "De la fondation de produits à la direction de communautés tech, en passant par le développement fullstack et IA.",
+    "achievements.title": "Distinctions & Engagements",
+    "achievements.subtitle": "Reconnaissances académiques, artistiques, techniques et leadership communautaire.",
+    "achievements.link": "Voir la source",
     "contact.title": "Contactez-moi",
     "contact.subtitle":
       "Intéressé par une collaboration, un projet mobile/IA/backend ou simplement une discussion tech ?\nJe suis ouvert aux opportunités. Écrivez-moi !",
@@ -120,6 +153,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.email": "Email",
     "contact.linkedin": "LinkedIn",
     "contact.github": "GitHub",
+    "contact.location": "Lomé, Togo",
+    "contact.availability": "Disponible pour projets freelance, CDI, collaborations open-source ou conseils produit/tech.",
     "contact.full_name": "Nom complet",
     "contact.full_name_ph": "Votre nom",
     "contact.email_label": "Email",
@@ -129,11 +164,15 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.message": "Message",
     "contact.message_ph": "Décrivez votre projet ou votre question...",
     "contact.send": "Envoyer le message",
+    "contact.sending": "Envoi…",
+    "contact.success": "Message envoyé",
+    "contact.error": "Une erreur est survenue. Veuillez réessayer.",
     "contact.response_time": "Je réponds généralement sous 24-48h.",
   },
   en: {
     "nav.home": "Home",
     "nav.about": "About",
+    "nav.skills": "Skills",
     "nav.projects": "Projects",
     "nav.experience": "Experience",
     "nav.achievements": "Achievements",
@@ -159,6 +198,23 @@ const translations: Record<Locale, Record<string, string>> = {
     "projects.filter.all": "All",
     "projects.filter.featured": "Featured",
     "projects.filter.none": "No projects in this category yet.",
+    "projects.filter.mobile": "Mobile",
+    "projects.filter.backend": "Backend",
+    "projects.filter.ai": "AI",
+    "projects.filter.contribution": "Contributions",
+    "projects.filter.algorithmique": "Algo",
+    "project.badge.featured": "Featured",
+    "project.badge.private": "Private",
+    "project.category.mobile": "Mobile",
+    "project.category.backend": "Backend",
+    "project.category.ai": "AI",
+    "project.category.contribution": "Contribution",
+    "project.category.algorithmique": "Algo",
+    "experience.title": "Journey & Experience",
+    "experience.subtitle": "From product founding to tech community leadership, through fullstack and AI development.",
+    "achievements.title": "Achievements & Engagements",
+    "achievements.subtitle": "Academic, artistic, technical recognitions and community leadership.",
+    "achievements.link": "View source",
     "contact.title": "Contact me",
     "contact.subtitle":
       "Interested in collaborating, a mobile/AI/backend project, or just a tech chat?\nI’m open to opportunities. Write to me!",
@@ -166,6 +222,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.email": "Email",
     "contact.linkedin": "LinkedIn",
     "contact.github": "GitHub",
+    "contact.location": "Lomé, Togo",
+    "contact.availability": "Available for freelance, full‑time roles, open‑source collaborations or product/tech advice.",
     "contact.full_name": "Full name",
     "contact.full_name_ph": "Your name",
     "contact.email_label": "Email",
@@ -175,11 +233,15 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.message": "Message",
     "contact.message_ph": "Describe your project or question...",
     "contact.send": "Send message",
+    "contact.sending": "Sending…",
+    "contact.success": "Message sent",
+    "contact.error": "Oops, something went wrong. Please try again.",
     "contact.response_time": "I usually reply within 24–48 hours.",
   },
   ar: {
     "nav.home": "الرئيسية",
     "nav.about": "نبذة عني",
+    "nav.skills": "المهارات",
     "nav.projects": "المشاريع",
     "nav.experience": "الخبرة",
     "nav.achievements": "الإنجازات",
@@ -205,6 +267,23 @@ const translations: Record<Locale, Record<string, string>> = {
     "projects.filter.all": "الكل",
     "projects.filter.featured": "مميّز",
     "projects.filter.none": "لا توجد مشاريع في هذه الفئة حالياً.",
+    "projects.filter.mobile": "المحمول",
+    "projects.filter.backend": "الخلفية",
+    "projects.filter.ai": "الذكاء الاصطناعي",
+    "projects.filter.contribution": "مساهمات",
+    "projects.filter.algorithmique": "خوارزميات",
+    "project.badge.featured": "مميز",
+    "project.badge.private": "خاص",
+    "project.category.mobile": "المحمول",
+    "project.category.backend": "الخلفية",
+    "project.category.ai": "الذكاء الاصطناعي",
+    "project.category.contribution": "مساهمة",
+    "project.category.algorithmique": "خوارزمية",
+    "experience.title": "الرحلة والخبرة",
+    "experience.subtitle": "من تأسيس المنتجات إلى قيادة مجتمعات التكنولوجيا، مروراً بالتطوير الشامل والذكاء الاصطناعي.",
+    "achievements.title": "الإنجازات والمشاركات",
+    "achievements.subtitle": "الاعترافات الأكاديمية والفنية والتقنية والقيادة المجتمعية.",
+    "achievements.link": "عرض المصدر",
     "contact.title": "تواصل معي",
     "contact.subtitle":
       "مهتم بالتعاون أو مشروع (موبايل/ذكاء اصطناعي/باكند) أو مجرد نقاش تقني؟\nأنا متاح للفرص. اكتب لي!",
@@ -212,6 +291,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.email": "البريد الإلكتروني",
     "contact.linkedin": "لينكدإن",
     "contact.github": "جيت هاب",
+    "contact.location": "لومي، توغو",
+    "contact.availability": "متاح لمشاريع حرة، عقود دائمة، تعاون مفتوح المصدر أو استشارات تقنيّة/منتجات.",
     "contact.full_name": "الاسم الكامل",
     "contact.full_name_ph": "اسمك",
     "contact.email_label": "البريد الإلكتروني",
@@ -221,11 +302,15 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.message": "الرسالة",
     "contact.message_ph": "صف مشروعك أو سؤالك...",
     "contact.send": "إرسال الرسالة",
+    "contact.sending": "جارٍ الإرسال…",
+    "contact.success": "تم الإرسال",
+    "contact.error": "حدث خطأ. الرجاء المحاولة مرة أخرى.",
     "contact.response_time": "عادةً أرد خلال 24–48 ساعة.",
   },
   ja: {
     "nav.home": "ホーム",
     "nav.about": "概要",
+    "nav.skills": "スキル",
     "nav.projects": "プロジェクト",
     "nav.experience": "経験",
     "nav.achievements": "実績",
@@ -251,6 +336,23 @@ const translations: Record<Locale, Record<string, string>> = {
     "projects.filter.all": "すべて",
     "projects.filter.featured": "注目",
     "projects.filter.none": "このカテゴリのプロジェクトはまだありません。",
+    "projects.filter.mobile": "モバイル",
+    "projects.filter.backend": "バックエンド",
+    "projects.filter.ai": "AI",
+    "projects.filter.contribution": "貢献",
+    "projects.filter.algorithmique": "アルゴリズム",
+    "project.badge.featured": "注目",
+    "project.badge.private": "プライベート",
+    "project.category.mobile": "モバイル",
+    "project.category.backend": "バックエンド",
+    "project.category.ai": "AI",
+    "project.category.contribution": "貢献",
+    "project.category.algorithmique": "アルゴリズム",
+    "experience.title": "経歴と経験",
+    "experience.subtitle": "製品の立ち上げからテックコミュニティのリーダーシップ、フルスタック・AI開発まで。",
+    "achievements.title": "実績と活動",
+    "achievements.subtitle": "学術的、芸術的、技術的な認識とコミュニティリーダーシップ。",
+    "achievements.link": "ソースを見る",
     "contact.title": "お問い合わせ",
     "contact.subtitle":
       "コラボやモバイル/AI/バックエンド案件、技術相談などお気軽にご連絡ください。\n新しい機会にオープンです。",
@@ -258,6 +360,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.email": "メール",
     "contact.linkedin": "LinkedIn",
     "contact.github": "GitHub",
+    "contact.location": "ロメ、トーゴ",
+    "contact.availability": "フリーランス、常勤、オープンソース協力、製品/技術相談のプロジェクトに対応可能です。",
     "contact.full_name": "お名前",
     "contact.full_name_ph": "お名前",
     "contact.email_label": "メール",
@@ -267,11 +371,15 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.message": "メッセージ",
     "contact.message_ph": "内容をご記入ください...",
     "contact.send": "送信",
+    "contact.sending": "送信中…",
+    "contact.success": "送信完了",
+    "contact.error": "エラーが発生しました。もう一度お試しください。",
     "contact.response_time": "通常24〜48時間以内に返信します。",
   },
   de: {
     "nav.home": "Start",
     "nav.about": "Über mich",
+    "nav.skills": "Fähigkeiten",
     "nav.projects": "Projekte",
     "nav.experience": "Erfahrung",
     "nav.achievements": "Erfolge",
@@ -297,6 +405,23 @@ const translations: Record<Locale, Record<string, string>> = {
     "projects.filter.all": "Alle",
     "projects.filter.featured": "Highlights",
     "projects.filter.none": "Aktuell keine Projekte in dieser Kategorie.",
+    "projects.filter.mobile": "Mobile",
+    "projects.filter.backend": "Backend",
+    "projects.filter.ai": "KI",
+    "projects.filter.contribution": "Beiträge",
+    "projects.filter.algorithmique": "Algo",
+    "project.badge.featured": "Highlights",
+    "project.badge.private": "Privat",
+    "project.category.mobile": "Mobile",
+    "project.category.backend": "Backend",
+    "project.category.ai": "KI",
+    "project.category.contribution": "Beitrag",
+    "project.category.algorithmique": "Algo",
+    "experience.title": "Werdegang & Erfahrung",
+    "experience.subtitle": "Vom Produktaufbau bis zur Leitung von Tech-Communities, inklusive Fullstack- und KI-Entwicklung.",
+    "achievements.title": "Erfolge & Engagement",
+    "achievements.subtitle": "Akademische, künstlerische, technische Anerkennungen und Community-Leadership.",
+    "achievements.link": "Quelle ansehen",
     "contact.title": "Kontakt",
     "contact.subtitle":
       "Interesse an Zusammenarbeit, einem Mobile/KI/Backend-Projekt oder einem Tech-Talk?\nIch bin offen für neue Möglichkeiten. Schreib mir!",
@@ -304,6 +429,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.email": "E-Mail",
     "contact.linkedin": "LinkedIn",
     "contact.github": "GitHub",
+    "contact.location": "Lomé, Togo",
+    "contact.availability": "Verfügbar für Freelance‑Projekte, Festanstellungen, Open‑Source‑Zusammenarbeit oder Produkt/Tech‑Beratung.",
     "contact.full_name": "Vollständiger Name",
     "contact.full_name_ph": "Dein Name",
     "contact.email_label": "E-Mail",
@@ -313,11 +440,15 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.message": "Nachricht",
     "contact.message_ph": "Beschreibe dein Projekt oder deine Frage...",
     "contact.send": "Nachricht senden",
+    "contact.sending": "Senden…",
+    "contact.success": "Nachricht gesendet",
+    "contact.error": "Ups, es ist ein Fehler aufgetreten. Bitte versuche es erneut.",
     "contact.response_time": "Ich antworte meist innerhalb von 24–48 Stunden.",
   },
   ru: {
     "nav.home": "Главная",
     "nav.about": "Обо мне",
+    "nav.skills": "Навыки",
     "nav.projects": "Проекты",
     "nav.experience": "Опыт",
     "nav.achievements": "Достижения",
@@ -343,6 +474,23 @@ const translations: Record<Locale, Record<string, string>> = {
     "projects.filter.all": "Все",
     "projects.filter.featured": "Избранное",
     "projects.filter.none": "В этой категории пока нет проектов.",
+    "projects.filter.mobile": "Мобильные",
+    "projects.filter.backend": "Бэкенд",
+    "projects.filter.ai": "ИИ",
+    "projects.filter.contribution": "Вклад",
+    "projects.filter.algorithmique": "Алго",
+    "project.badge.featured": "Избранное",
+    "project.badge.private": "Приватный",
+    "project.category.mobile": "Мобильные",
+    "project.category.backend": "Бэкенд",
+    "project.category.ai": "ИИ",
+    "project.category.contribution": "Вклад",
+    "project.category.algorithmique": "Алго",
+    "experience.title": "Путь и опыт",
+    "experience.subtitle": "От создания продукта до лидерства в техсообществах, включая fullstack и AI-разработку.",
+    "achievements.title": "Достижения и активность",
+    "achievements.subtitle": "Академические, художественные, технические признания и лидерство в сообществе.",
+    "achievements.link": "Посмотреть источник",
     "contact.title": "Связаться со мной",
     "contact.subtitle":
       "Хотите сотрудничать, обсудить mobile/AI/backend проект или просто поговорить о технологиях?\nЯ открыт к возможностям. Напишите мне!",
@@ -350,6 +498,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.email": "Email",
     "contact.linkedin": "LinkedIn",
     "contact.github": "GitHub",
+    "contact.location": "Ломе, Того",
+    "contact.availability": "Доступен для фриланс‑проектов, постоянной работы, open‑source сотрудничества или консультаций по продуктам/технологиям.",
     "contact.full_name": "Полное имя",
     "contact.full_name_ph": "Ваше имя",
     "contact.email_label": "Email",
@@ -359,6 +509,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.message": "Сообщение",
     "contact.message_ph": "Опишите ваш проект или вопрос...",
     "contact.send": "Отправить",
+    "contact.sending": "Отправка…",
+    "contact.success": "Сообщение отправлено",
+    "contact.error": "Ошибка. Пожалуйста, попробуйте снова.",
     "contact.response_time": "Обычно отвечаю в течение 24–48 часов.",
   },
 };

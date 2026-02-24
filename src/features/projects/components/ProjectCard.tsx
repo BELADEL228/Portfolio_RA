@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { Github, ExternalLink, Lock } from "lucide-react";
 import Image from "next/image";
 import { Project } from "../data/projects";
-import { cn } from "@/lib/utils";
+import { cn, localize } from "@/lib/utils";
+import { useI18n } from "@/app/providers";
 
 interface ProjectCardProps {
   project: Project;
@@ -15,6 +16,11 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, onClick }: ProjectCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { locale, t } = useI18n();
+
+  const title = localize(project.title, locale);
+  const shortDesc = localize(project.shortDesc, locale);
+  const categoryLabel = t(`project.category.${project.category}`) || project.category;
 
   // Gestion automatique play/pause au hover
   useEffect(() => {
@@ -56,6 +62,15 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.7, ease: "easeOut" }}
       whileHover={{ y: -12, scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      role="button"
+      tabIndex={0}
+      aria-label={title}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick?.();
+        }
+      }}
       className={cn(
         "group relative overflow-hidden rounded-2xl project-card glass cursor-pointer border border-raycart-card/30",
         project.featured && "ring-1 ring-raycart-accent/40 ring-offset-2 ring-offset-raycart-dark"
@@ -83,7 +98,7 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
         {/* Image principale */}
         <Image
           src={project.image}
-          alt={project.title}
+          alt={title}
           fill
           className={cn(
             "object-cover transition-all duration-700 ease-out z-0",
@@ -107,12 +122,12 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
         <div className="absolute top-4 left-4 flex gap-2 z-30">
           {project.featured && (
             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-raycart-accent text-raycart-dark shadow-sm">
-              Featured
+              {t("project.badge.featured")}
             </span>
           )}
           {project.isPrivate && (
             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-amber-600/90 text-white flex items-center gap-1 shadow-sm">
-              <Lock size={12} /> Privé
+              <Lock size={12} /> {t("project.badge.private")}
             </span>
           )}
         </div>
@@ -120,7 +135,7 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
         {/* Info bas */}
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-30">
           <span className="text-xs uppercase tracking-wider text-white/90 font-medium drop-shadow">
-            {project.category} • {project.date}
+            {categoryLabel} • {project.date}
           </span>
         </div>
       </div>
@@ -128,11 +143,11 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
       {/* Contenu texte (inchangé) */}
       <div className="p-6 space-y-4">
         <h3 className="text-xl md:text-2xl font-bold text-white text-raycart-text group-hover:text-raycart-accent transition-colors duration-300">
-          {project.title}
+          {title}
         </h3>
 
         <p className="text-sm md:text-base text-raycart-muted line-clamp-3 min-h-[4rem] md:min-h-[4.5rem] transition-colors duration-300 group-hover:text-raycart-text/90">
-          {project.shortDesc}
+          {shortDesc}
         </p>
 
         <div className="flex flex-wrap gap-2 pt-2">

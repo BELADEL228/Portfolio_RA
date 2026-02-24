@@ -84,23 +84,23 @@ export default function ContactSection() {
 
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-raycart-accent/20 flex items-center justify-center">
-                    <Mail className="text-raycart-accent sm:size-24" size={20} />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-raycart-accent/20 flex items-center justify-center flex-shrink-0">
+                  <Mail className="text-raycart-accent sm:size-5" size={20} />
                   </div>
                   <div>
-                    <p className="text-xs sm:text-sm text-raycart-muted">{t("contact.email")}</p>
-                    <a
-                      href="mailto:assounrodrigue5@gmail.com"
-                      className="text-raycart-text hover:text-raycart-accent transition-colors text-sm sm:text-base"
-                    >
-                      assounrodrigue5@gmail.com
-                    </a>
+                  <p className="text-xs sm:text-sm text-raycart-muted">{t("contact.email")}</p>
+                  <a
+                    href="mailto:assounrodrigue5@gmail.com"
+                    className="text-raycart-text hover:text-raycart-accent transition-colors text-sm sm:text-base"
+                  >
+                    assounrodrigue5@gmail.com
+                  </a>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-raycart-accent/20 flex items-center justify-center">
-                    <Linkedin className="text-raycart-accent sm:size-24" size={20} />
+                    <Linkedin className="text-raycart-accent sm:size-5" size={8} />
                   </div>
                   <div>
                     <p className="text-xs sm:text-sm text-raycart-muted">{t("contact.linkedin")}</p>
@@ -117,7 +117,7 @@ export default function ContactSection() {
 
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-raycart-accent/20 flex items-center justify-center">
-                    <Github className="text-raycart-accent sm:size-24" size={20} />
+                    <Github className="text-raycart-accent sm:size-6" size={8} />
                   </div>
                   <div>
                     <p className="text-xs sm:text-sm text-raycart-muted">{t("contact.github")}</p>

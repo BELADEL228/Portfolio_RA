@@ -4,9 +4,14 @@
 import { motion } from "framer-motion";
 import { Briefcase, Users, Calendar, MapPin } from "lucide-react";
 import { experiences, Experience } from "@/data/experiences";
-import { cn } from "@/lib/utils";
+import { cn, localize } from "@/lib/utils";
+import { useI18n } from "@/app/providers";
 
 export default function ExperienceSection() {
+  const { t, locale } = useI18n();
+
+  const getText = (val: string | Record<string,string>) => localize(val, locale);
+
   return (
     <section id="experience" className="py-16 sm:py-20 md:py-28 lg:py-32 relative overflow-hidden">
       {/* Fond */}
@@ -21,9 +26,9 @@ export default function ExperienceSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-10 sm:mb-12 md:mb-16"
         >
-          <h2 className="section-title mb-4">Parcours & Expériences</h2>
+          <h2 className="section-title mb-4">{t("experience.title")}</h2>
           <p className="text-raycart-muted text-lg max-w-3xl mx-auto">
-            De la fondation de produits à la direction de communautés tech, en passant par le développement fullstack et IA.
+            {t("experience.subtitle")}
           </p>
         </motion.div>
 
@@ -49,8 +54,8 @@ export default function ExperienceSection() {
                 <div className="w-full md:w-5/12 glass rounded-2xl p-5 sm:p-6 lg:p-8 border border-raycart-card/30 hover:border-raycart-accent/40 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4 sm:mb-6">
                     <div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-raycart-text mb-1">{exp.title}</h3>
-                      <p className="text-raycart-accent font-medium text-sm sm:text-base">{exp.organization}</p>
+                      <h3 className="text-xl sm:text-2xl font-bold text-raycart-text mb-1">{getText(exp.title)}</h3>
+                      <p className="text-raycart-accent font-medium text-sm sm:text-base">{getText(exp.organization)}</p>
                     </div>
                     <span className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-full bg-raycart-card/70 text-raycart-muted flex items-center gap-2">
                       <Calendar size={14} className="sm:size-16" />
@@ -62,7 +67,7 @@ export default function ExperienceSection() {
                     {exp.description.map((point, i) => (
                       <li key={i} className="flex items-start gap-2 sm:gap-3">
                         <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-raycart-accent flex-shrink-0" />
-                        {point}
+                        {getText(point)}
                       </li>
                     ))}
                   </ul>
@@ -85,7 +90,7 @@ export default function ExperienceSection() {
                   {exp.location && (
                     <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-raycart-muted flex items-center gap-2">
                       <MapPin size={14} className="sm:size-16" />
-                      {exp.location}
+                      {getText(exp.location)}
                     </div>
                   )}
                 </div>

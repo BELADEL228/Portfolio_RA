@@ -74,6 +74,22 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head>
+        {/* set initial theme before React hydrates to avoid flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function(){
+  try {
+    var t = localStorage.getItem('theme');
+    if(!t){
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    if(t === 'dark') document.documentElement.classList.add('dark');
+  } catch(e){}
+})();
+            `,
+          }}
+        />
         {/* Préférences couleur de base */}
         <meta name="theme-color" content="#050A14" />
         <meta name="msapplication-TileColor" content="#050A14" />
@@ -81,6 +97,13 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased min-h-screen bg-raycart-dark text-raycart-text selection:bg-raycart-accent/30 selection:text-white`}
       >
+        {/* skip link for keyboard users */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-raycart-accent text-raycart-dark p-2 rounded"
+        >
+          Skip to content
+        </a>
         <Providers>{children}</Providers>
       </body>
     </html>

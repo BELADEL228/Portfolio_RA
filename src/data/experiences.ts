@@ -21,7 +21,7 @@ export interface Experience {
 export const experiences: Experience[] = [
   {
     id: "founder-ijeaf",
-    title: "Founder & IT Manager",
+    title: "Fondateur et CEO – IJEAF",
     organization: "IJEAF",
     period: "Février 2025 – Aujourd'hui",
     location: "Lomé, Togo",
@@ -31,7 +31,7 @@ export const experiences: Experience[] = [
       "Coordination technique, structuration du produit et gestion des priorités",
       "Amélioration continue de l'expérience utilisateur et alignement sur les besoins réels",
     ],
-    technologies: ["Flutter", "FastAPI", "Azure", "Product Management"],
+    technologies: ["Flutter", "FastAPI", "Product Management"],
     type: "professional",
     featured: true,
   },

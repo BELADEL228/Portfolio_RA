@@ -23,11 +23,11 @@ export default function ProjectsSection() {
   const filters: { label: string; value: Filter }[] = [
     { label: t("projects.filter.all"), value: "all" },
     { label: t("projects.filter.featured"), value: "featured" },
-    { label: "Mobile", value: "mobile" },
-    { label: "Backend", value: "backend" },
-    { label: "AI / IA", value: "ai" },
-    { label: "Contributions", value: "contribution" },
-    { label: "Algo", value: "algorithmique" },
+    { label: t("projects.filter.mobile"), value: "mobile" },
+    { label: t("projects.filter.backend"), value: "backend" },
+    { label: t("projects.filter.ai"), value: "ai" },
+    { label: t("projects.filter.contribution"), value: "contribution" },
+    { label: t("projects.filter.algorithmique"), value: "algorithmique" },
   ];
 
   return (
@@ -53,18 +53,21 @@ export default function ProjectsSection() {
         {/* Filtres */}
         <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
           {filters.map((f) => (
-            <button
+            <motion.button
               key={f.value}
               onClick={() => setFilter(f.value)}
+              whileTap={{ scale: 0.95 }}
+              aria-pressed={filter === f.value}
               className={cn(
                 "px-3 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300",
                 filter === f.value
                   ? "bg-raycart-accent text-raycart-dark shadow-lg shadow-raycart-accent/30"
                   : "bg-raycart-card/60 text-raycart-muted hover:bg-raycart-card hover:text-raycart-text border border-raycart-card/40"
               )}
+              type="button"
             >
               {f.label}
-            </button>
+            </motion.button>
           ))}
         </div>
 

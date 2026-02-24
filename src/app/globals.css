@@ -5,9 +5,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
   body {
     @apply bg-raycart-dark text-raycart-text font-sans;
     overflow-x: hidden;
+  }
+  
+  /* Smooth scroll targeting */
+  @supports (scroll-behavior: smooth) {
+    a[href^="#"] {
+      @apply transition-all duration-300;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--raycart-accent));
+    outline-offset: 2px;
   }
   :root {
     --raycart-dark: 210 40% 98%;
